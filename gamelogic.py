@@ -3,8 +3,7 @@ import inspect
 from server import Server
 import commands
 from classes import *
-game = Game()
-print(id(game))
+from state import game
 #This dict comprehension generates the command dictionary from the command.py file
 command_dict = {
     name: func

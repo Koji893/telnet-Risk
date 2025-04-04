@@ -1,6 +1,6 @@
 import classes
-from gamelogic import game
-print(id(game))
+from state import game
+#print(id(game))
 '''                                                                                                                                    
 def [command](player, *args):                                                                                                          
     return {                                                                                                                           

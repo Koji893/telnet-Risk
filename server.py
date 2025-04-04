@@ -16,8 +16,8 @@ class Client:
             return data.decode('utf-8').strip()
         except:
             return None
-        def close(self):
-            self.writer.close()
+    def close(self):
+        self.writer.close()
 
 
 class Server:
