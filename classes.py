@@ -1,40 +1,51 @@
 import asyncio
 import random
-import allowed.py
+import allowed
 class Game:
     def __init__(self):
         self.players = []
         self.status = 0 
-        self.state = "selecting Turn order"
+        self.state = ""
         self.turns= []
-        self.bindReason = None
         self.rolls = {}
+        self.allowed_cmd ={"rolling for turn order":["roll"]
+
+                      } 
     def add_player(self,player):
         self.players.append(player)
     def remove_player(self,player):
         if player in self.players:
             self.players.remove(player)
-    def passrole(self,rolls,players)
+    def passroll(self,rolls,player):
+        self.rolls[player] = rolls
     def get_all_players(self):
         return self.players
-    async def turnOrder():
-        self.bindReason= "Rolling for Turn Order"
+    async def turnOrder(self):
+        self.state ="rolling for turn order"
+        self.bind_players(self.players,"Roll for turn.")
         
-        
-    def bind_player(self):
-
-    def bind_players():
-    
+    def bind_player(self,player,reason):
+        player.bound["status"] = True
+        player.bound["reason"] = reason
+    def bind_players(self,players):
+        for player in players:
+            self.bind_players(player)
     def start(self):
-        self.turnOrder()
-    
+        self.status= 0
+        #self.turnOrder()
+    async def broadcast(self,message):
+        for player in self.players:
+            await player.client.send(message)
+            print(player)
+            print(player.client)
+            print(message)
 
 class Player:
     Players = []
     def __init__(self,name,client):
         self.name = name
         self.client = client
-        self.bound=False
+        self.bound= {"Status": False, "reason":""} 
 class Dice:
     def __init__(self):
         self.rolls = []
