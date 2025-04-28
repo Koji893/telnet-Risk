@@ -3,44 +3,59 @@ import inspect
 from server import Server
 import commands
 from classes import *
+from classes import Player
 from state import game
 #This dict comprehension generates the command dictionary from the command.py file
 command_dict = {
     name: func
     for name, func in inspect.getmembers(commands, inspect.isfunction)
     }
-async def command(cmd,*args,player):
+async def command(cmd,player,*args):
     if cmd in command_dict:
-        return command_dict[cmd](player,*args) +"\n"
+        return command_dict[cmd](player,*args)
     else:
         return "That command is invalid\n"
-async def commandProcessor(data,player,all_players):
-    cmd,*args = data.strip()
-    
-    if player.bound == True:
-        if cmd in allowed_cmd:
-            result = await command(cmd,*args,player)
+async def commandProcessor(data,player,game):
+    game.players
+    if data == "": data = "invalid" 
+    cmd,*args = data.strip().split()
+    if player.bound["Status"] == True:
+        reason = player.bound["reason"]
+        allowed_cmds = {game.allowed_cmd[reason]}
+        await player.client.send(player.bound[reason])
+        if cmd in allowed_cmds:
+            result = await command(cmd,player,*args)
         else:
-            result = {message: "that command is not allowed"}
+            result = {message: "that command is not allowed right now."}
     else:
-        result = await command(cmd,*args,player)
+        result = await command(cmd,player,*args)
+    print(f"Command Processor Result: {result=}")
+    print(game.players)
     if isinstance(result,dict):
         scope = result.get("scope","player")
-        message= result.get("message","")
+        message = result.get("message","")
         if scope =="all":
-            for p in all_players:
-                await p.client.send(message)
+            '''
+            for p in allPlayers:
+                try:
+                    print(p.client)
+                    await p.client.send(message)
+                except Exception as e:
+                    print(f"Error sending to {p.name}: {e}")
+                    '''
+            await game.broadcast(message)
         elif scope == "target":
             target_name = result.get("target")
-            for p in all_players:
+            for p in allPlayers:
                 if p.name == target_name:
                     await p.client.send(message)
                     break
         else:
-            await player.client.send(result)
+            await player.client.send(message)
     else:
+        print(player.client)
+        print(player)
         await player.client.send(result)
-                
 
 async def handle_client(client):
     await client.send("welcome to risk\n")
@@ -52,13 +67,13 @@ async def handle_client(client):
     game.add_player(player)
     print([p.name for p in game.players])
     while True:
-        await client.send("> ")
+        await client.send("\n>")
         data = await client.receive()
         if not data:
             break
         if data.lower() in ('quit', 'exit'):      
             break
-        await commandProcessor(data,player,game.players)
+        await commandProcessor(data,player,game)
     print(f"{name} disconnected.")
 
 async def main():

@@ -1,4 +1,4 @@
-import classes
+from classes import *
 from state import game
 #print(id(game))
 '''                                                                                                                                    
@@ -16,7 +16,7 @@ def whoami(player):
     return player.name
 def clear(player):
    return "\033[2J\033[H"
-def startGame():
+def startGame(player):
      if game.status == 0:
           game.start()
           return {
@@ -26,8 +26,10 @@ def startGame():
      else:
           return {"scope": "player",
                   "message": "A game has already started."}
-async def roll(player):
-     dice = Dice
-     if game.state == "Selecting Turn Order":
-          dice.roll(1)
-          
+def roll(*player):
+     dice = Dice()
+     if game.state == "rolling for Turn Order":
+          rolls = dice.roll(1)
+          game.passroll(rolls,player)
+     message = "you rolled a 6"
+     return {"message" : "you rolled a six"}
