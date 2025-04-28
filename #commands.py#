@@ -30,4 +30,4 @@ async def roll(player):
      dice = Dice
      if game.state == "Selecting Turn Order":
           dice.roll(1)
-          
+          return 

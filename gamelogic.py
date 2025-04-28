@@ -9,14 +9,21 @@ command_dict = {
     name: func
     for name, func in inspect.getmembers(commands, inspect.isfunction)
     }
-async def command(data,player):
-    cmd, *args = data.strip().split()
+async def command(cmd,*args,player):
     if cmd in command_dict:
         return command_dict[cmd](player,*args) +"\n"
     else:
         return "That command is invalid\n"
 async def commandProcessor(data,player,all_players):
-    result = await command(data,player)
+    cmd,*args = data.strip()
+    
+    if player.bound == True:
+        if cmd in allowed_cmd:
+            result = await command(cmd,*args,player)
+        else:
+            result = {message: "that command is not allowed"}
+    else:
+        result = await command(cmd,*args,player)
     if isinstance(result,dict):
         scope = result.get("scope","player")
         message= result.get("message","")

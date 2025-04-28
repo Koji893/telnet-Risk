@@ -14,17 +14,23 @@ class Game:
     def remove_player(self,player):
         if player in self.players:
             self.players.remove(player)
-    def passrole(self,rolls,players)
+    def passrole(self,rolls,players):
+        self.rolls[player] = rolls
     def get_all_players(self):
         return self.players
+    async def rollProcessor(self,partcipating_Players):
+        while True:
+            if set(self.rolls.keys()) == set(participatingPlayers):
+                return True
     async def turnOrder():
         self.bindReason= "Rolling for Turn Order"
+        self.bind_players()
         
-        
-    def bind_player(self):
-
+    def bind_player(self,player):
+        player.bound=True
     def bind_players():
-    
+        for player in self.players:
+            self.bind(player)
     def start(self):
         self.turnOrder()
     
