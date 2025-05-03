@@ -13,7 +13,10 @@ def get_players(player):
      return "\n".join(players)
 
 def whoami(player):
-    return player.name
+    return {
+         'scope': 'player',
+         'message': f'{player.name}'
+         }
 def clear(player):
    return "\033[2J\033[H"
 def startGame(player):
@@ -21,7 +24,7 @@ def startGame(player):
           game.start()
           return {
                "scope": "all",
-               " message": f"the game has started with {len(game.players)} players "
+               "message": f"the game has started with {len(game.players)} players "
           }
      else:
           return {"scope": "player",

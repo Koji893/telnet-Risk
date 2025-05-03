@@ -68,8 +68,7 @@ async def handle_client(client):
     while True:
         await client.send(">")
         data = await client.receive()
-        #if not data:
-            #break
+        if
         if data.lower() in ('quit', 'exit'):      
             break
         await commandProcessor(data,player,game)
