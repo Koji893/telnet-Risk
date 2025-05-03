@@ -8,7 +8,7 @@ class Game:
         self.state = ""
         self.turns= []
         self.rolls = {}
-        self.allowed_cmd ={"rolling for turn order":["roll"]
+        self.allowed_cmd = {"roll for turn order":["roll"]
 
                       } 
     def add_player(self,player):
@@ -20,32 +20,33 @@ class Game:
         self.rolls[player] = rolls
     def get_all_players(self):
         return self.players
-    async def turnOrder(self):
+    def turnOrder(self):
         self.state ="rolling for turn order"
-        self.bind_players(self.players,"Roll for turn.")
+        reason = "roll for turn order"
+        self.bind_players(reason)
+        asyncio.create_task(self.broadcast('\r'+'please roll for turn order'+'\n'))
         
     def bind_player(self,player,reason):
-        player.bound["status"] = True
-        player.bound["reason"] = reason
-    def bind_players(self,players):
-        for player in players:
-            self.bind_players(player)
+        player.bound["Status"] = True
+        player.bound["Reason"] = reason
+        print(player.name)
+    def bind_players(self,reason):
+        for player in self.players:
+            self.bind_player(player,reason)
     def start(self):
-        self.status= 0
-        #self.turnOrder()
+        self.status = 1
+        self.turnOrder()
     async def broadcast(self,message):
+        print("---broadcasting---")
         for player in self.players:
             await player.client.send(message)
-            print(player)
-            print(player.client)
-            print(message)
 
 class Player:
     Players = []
     def __init__(self,name,client):
         self.name = name
         self.client = client
-        self.bound= {"Status": False, "reason":""} 
+        self.bound= {"Status": False, "Reason":""} 
 class Dice:
     def __init__(self):
         self.rolls = []
